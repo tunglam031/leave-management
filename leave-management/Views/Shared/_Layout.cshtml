@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿
+@using Microsoft.AspNetCore.Identity
+@using leave_management.Data
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    
-    
+
+
 </head>
 <body>
     <header>
@@ -28,17 +34,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="" asp-action="">Apply For Leave</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Manage
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a>
-                                <a class="dropdown-item " href="#">Leave Allocation</a>
-                                <a class="dropdown-item " href="#">Leave Application</a>
-                                <a class="dropdown-item" href="#">Employees</a>
-                            </div>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            if (User.IsInRole("Administrator"))
+                            {
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Manage
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a>
+                                        <a class="dropdown-item " asp-controller="LeaveAllocation" asp-action="Index">Leave Allocations</a>
+                                        <a class="dropdown-item " href="#">Leave Application</a>
+                                        <a class="dropdown-item"asp-controller="LeaveAllocation" asp-action="ListEmployees">Employees</a>
+                                    </div>
+                                </li>
+                            }
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
